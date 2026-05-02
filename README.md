@@ -80,6 +80,7 @@ Attacker Request
 | 🔐 **Password Hashing** | Admin passwords stored securely using `pbkdf2:sha256` |
 | 🌍 **GeoIP Lookup** | Identifies the attacker's country using IP geolocation |
 | 📡 **Telemetry API** | `/api/telemetry` endpoint providing live JSON data for integrations |
+| 🔔 **Real-Time Alerting** | Automated Discord/Slack webhook notifications for HIGH-risk attacks |
 
 ---
 
@@ -111,6 +112,16 @@ pip install -r requirements.txt
 # 5. Run the application
 python app.py
 ```
+
+### 🔔 Configuring Real-Time Alerts
+
+To receive alerts on Discord or Slack:
+1. Create a Webhook URL in your Discord channel settings.
+2. Open the `.env` file.
+3. Replace `your_webhook_here` with your actual Discord Webhook URL:
+   ```env
+   WEBHOOK_URL=https://discord.com/api/webhooks/...
+   ```
 
 ### Access the Application
 

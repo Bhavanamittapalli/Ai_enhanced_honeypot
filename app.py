@@ -66,6 +66,33 @@ def get_country(ip):
         return "Unknown"
 
 
+# =========================
+# 🚨 Real-Time Alerting (Webhooks)
+# =========================
+def send_webhook_alert(ip, severity, payload_summary):
+    webhook_url = os.getenv("WEBHOOK_URL")
+    if not webhook_url or "your_webhook_here" in webhook_url:
+        return
+        
+    try:
+        data = {
+            "content": "🚨 **HIGH RISK INTRUSION DETECTED** 🚨",
+            "embeds": [{
+                "title": "Honeypot Alert",
+                "color": 15158332, # Red
+                "fields": [
+                    {"name": "IP Address", "value": ip, "inline": True},
+                    {"name": "Severity", "value": severity, "inline": True},
+                    {"name": "Timestamp", "value": str(datetime.datetime.now()), "inline": False},
+                    {"name": "Details", "value": f"```{payload_summary[:1000]}```", "inline": False}
+                ],
+                "footer": {"text": "AI-Enhanced Adaptive Honeypot"}
+            }]
+        }
+        requests.post(webhook_url, json=data, timeout=5)
+    except Exception as e:
+        print(f"Failed to send webhook: {e}")
+
 
 # =========================
 # 🪤 Decoy Login Page (Robust Data Capture & Shadow Routing)
@@ -97,6 +124,10 @@ def decoy_login():
             
             insert_attack(ip, form_data.get('username', 'unknown'), payload_log, risk_score, str(timestamp), country)
             
+            # 🚨 Send Real-Time Alert for High Risk
+            if risk_score == "HIGH":
+                send_webhook_alert(ip, risk_score, payload_log)
+
             # Shadow Routing — serve fake data to high-risk attackers
             if risk_score == "HIGH":
                 mock_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mock_database.json')
@@ -190,6 +221,10 @@ def index():
             str(timestamp),
             country
         )
+
+        # 🚨 Send Real-Time Alert for High Risk
+        if prediction == "HIGH":
+            send_webhook_alert(ip, prediction, str(headers))
 
         return redirect('/dashboard')
 
