@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>System Monitor</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI', sans-serif;
+    background:#020617;
+    color:white;
+    display:flex;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+  width:230px;
+  height:100vh;
+  background:#0f172a;
+  border-right:1px solid #1e293b;
+  padding-top:20px;
+  position:fixed;
+}
+
+.sidebar h2{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.sidebar a{
+  display:block;
+  padding:12px 20px;
+  color:#94a3b8;
+  text-decoration:none;
+  transition:0.3s;
+}
+
+.sidebar a:hover{
+  background:#1e293b;
+  color:#38bdf8;
+}
+
+.active{
+  background:#1e293b;
+  color:#38bdf8 !important;
+}
+
+/* ================= MAIN ================= */
+.main{
+    margin-left:230px;
+    width:100%;
+    padding:40px;
+    text-align:center;
+}
+
+/* ================= CARDS ================= */
+.cards{
+    display:flex;
+    gap:25px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-top:40px;
+}
+
+.card{
+    background:#0f172a;
+    padding:30px;
+    border-radius:14px;
+    width:230px;
+    text-align:center;
+    box-shadow:0 0 20px rgba(0,255,255,0.08);
+    border:1px solid #1e293b;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card h3{
+    margin-bottom:15px;
+    color:#94a3b8;
+}
+
+.status-active{
+    color:#22c55e;
+    font-weight:bold;
+    font-size:18px;
+}
+
+.status-ai{
+    color:#38bdf8;
+    font-weight:bold;
+    font-size:18px;
+}
+
+.big-number{
+    font-size:26px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+  <h2>🛡 AI Honeypot</h2>
+  <a href="/dashboard">Dashboard</a>
+  <a href="/logs">Logs</a>
+  <a href="/analytics">Analytics</a>
+  <a href="/blocked">Blocked IPs</a>
+  <a href="/system" class="active">System</a>
+  <a href="/logout" style="color:#ef4444;">Logout</a>
+</div>
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="main">
+
+<h2>🖥 System Monitoring Panel</h2>
+
+<div class="cards">
+
+    <div class="card">
+        <h3>Server Status</h3>
+        <p class="status-active">🟢 ACTIVE</p>
+    </div>
+
+    <div class="card">
+        <h3>Total Attacks</h3>
+        <p class="big-number">{{ total }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Blocked IPs</h3>
+        <p class="big-number">{{ blocked_count }}</p>
+    </div>
+
+    <div class="card">
+        <h3>AI Model Status</h3>
+        <p class="status-ai">Running</p>
+    </div>
+
+    <div class="card">
+        <h3>Last Attack Time</h3>
+        <p style="font-size:14px;">{{ last_attack }}</p>
+    </div>
+
+</div>
+
+</div>
+
+<!-- Auto Refresh Every 8 Seconds -->
+<script>
+setTimeout(() => {
+  window.location.reload();
+}, 8000);
+</script>
+
+</body>
+</html>

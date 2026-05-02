@@ -1,0 +1,19 @@
+# Virtual environments
+venv/
+.venv/
+
+# Database (contains attack data - regenerated on run)
+attacks.db
+
+# Environment variables (contains secrets)
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Test files
+test_honeypot.py
+
+# IDE
+.vscode/

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI-Enhanced Honeypot Threat Detection & Response System</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:#020617;
+  color:white;
+  display:flex;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+  width:230px;
+  height:100vh;
+  background:#0f172a;
+  border-right:1px solid #1e293b;
+  padding-top:20px;
+  position:fixed;
+}
+
+.sidebar h2{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.sidebar a{
+  display:block;
+  padding:12px 20px;
+  color:#94a3b8;
+  text-decoration:none;
+  transition:0.3s;
+}
+
+.sidebar a:hover{
+  background:#1e293b;
+  color:#38bdf8;
+}
+
+/* ================= MAIN ================= */
+.main{
+  margin-left:230px;
+  width:100%;
+}
+
+/* ================= HEADER ================= */
+.header{
+  padding:20px;
+  background:#0f172a;
+  border-bottom:1px solid #1e293b;
+}
+
+.header small{
+  color:#94a3b8;
+}
+
+/* ================= CARDS ================= */
+.cards{
+  display:flex;
+  gap:20px;
+  padding:20px;
+  flex-wrap:wrap;
+}
+
+.card{
+  background:#0f172a;
+  padding:20px 30px;
+  border-radius:12px;
+  text-align:center;
+  min-width:170px;
+  box-shadow:0 0 15px rgba(0,255,255,0.08);
+}
+
+.total{color:#38bdf8;}
+.high{color:#ef4444;}
+.medium{color:#f59e0b;}
+.low{color:#22c55e;}
+
+/* ALERT */
+.alert-box{
+  color:#ef4444;
+  text-align:center;
+  font-weight:bold;
+  margin:15px;
+  font-size:18px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink{
+  50%{opacity:0.4;}
+}
+
+/* CHART */
+.chart-box{
+  width:70%;
+  margin:20px auto;
+  background:#0f172a;
+  padding:20px;
+  border-radius:12px;
+}
+
+/* MAP */
+.map-box{
+  width:90%;
+  height:400px;
+  margin:20px auto;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid #1e293b;
+}
+
+/* TABLE */
+table{
+  width:95%;
+  margin:30px auto;
+  border-collapse:collapse;
+  background:#0f172a;
+  border-radius:10px;
+}
+
+th,td{
+  padding:12px;
+  text-align:center;
+  border-bottom:1px solid #1e293b;
+}
+
+th{
+  background:#111827;
+}
+
+.sev-high{color:#ef4444;font-weight:bold;}
+.sev-medium{color:#f59e0b;font-weight:bold;}
+.sev-low{color:#22c55e;font-weight:bold;}
+
+tr:hover{
+  background:#1e293b;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+  <h2>🛡 AI Honeypot</h2>
+  <a href="/dashboard">Dashboard</a>
+  <a href="/logs">Logs</a>
+  <a href="/analytics">Analytics</a>
+  <a href="/blocked">Blocked IPs</a>
+  <a href="/system">System</a>
+  <a href="/logout" style="color:#ef4444;">Logout</a>
+</div>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+
+  <div class="header">
+    <h2>AI Honeypot Security Dashboard</h2>
+    <small>Admin Monitoring Panel | Real-Time Threat Detection</small>
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards">
+    <div class="card total">
+      <h3>Total Attacks</h3>
+      <h2>{{ stats.total }}</h2>
+    </div>
+
+    <div class="card high">
+      <h3>High Risk</h3>
+      <h2>{{ stats.high }}</h2>
+    </div>
+
+    <div class="card medium">
+      <h3>Medium Risk</h3>
+      <h2>{{ stats.medium }}</h2>
+    </div>
+
+    <div class="card low">
+      <h3>Low Risk</h3>
+      <h2>{{ stats.low }}</h2>
+    </div>
+  </div>
+
+  {% if stats.high > 0 %}
+  <div class="alert-box">
+    🚨 CRITICAL ALERT: High Risk Intrusion Detected
+  </div>
+  {% endif %}
+
+  <!-- CHART -->
+  <div class="chart-box">
+    <canvas id="attackChart"></canvas>
+  </div>
+
+  <!-- MAP -->
+  <div class="map-box" id="attackMap"></div>
+
+  <!-- TABLE -->
+  <table>
+  <tr>
+    <th>Attacker IP</th>
+    <th>Username</th>
+    <th>Country</th>
+    <th>Timestamp</th>
+    <th>Severity</th>
+  </tr>
+
+  {% for a in attacks %}
+  <tr>
+    <td>{{ a.ip }}</td>
+    <td>{{ a.username }}</td>
+    <td>{{ a.country }}</td>
+    <td>{{ a.timestamp }}</td>
+    <td class="{% if a.severity == 'HIGH' %}sev-high{% elif a.severity == 'MEDIUM' %}sev-medium{% else %}sev-low{% endif %}">
+      {{ a.severity }}
+    </td>
+  </tr>
+  {% endfor %}
+  </table>
+
+</div>
+
+<!-- ================= CHART SCRIPT ================= -->
+<script>
+new Chart(document.getElementById('attackChart'), {
+  type: 'bar',
+  data: {
+    labels: ['High Risk', 'Medium Risk', 'Low Risk'],
+    datasets: [{
+      label: 'Attack Severity Distribution',
+      data: [{{ stats.high }}, {{ stats.medium }}, {{ stats.low }}],
+      backgroundColor: ['#ef4444','#f59e0b','#22c55e']
+    }]
+  },
+  options: {
+    plugins: { legend: { labels: { color: "white" } } },
+    scales: {
+      x: { ticks: { color: "white" } },
+      y: { ticks: { color: "white" }, beginAtZero: true }
+    }
+  }
+});
+</script>
+
+<!-- ================= MAP SCRIPT ================= -->
+<script>
+var map = L.map('attackMap').setView([20, 0], 2);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+const countryCoords = {
+    "United States": [37.0902, -95.7129],
+    "India": [20.5937, 78.9629],
+    "Australia": [-25.2744, 133.7751],
+    "United Kingdom": [55.3781, -3.4360],
+    "Germany": [51.1657, 10.4515],
+    "Canada": [56.1304, -106.3468],
+    "France": [46.2276, 2.2137]
+};
+
+const countries = {{ country_data | tojson }};
+
+countries.forEach(country => {
+    if(countryCoords[country]){
+        L.circleMarker(countryCoords[country], {
+            radius: 8,
+            color: "red",
+            fillOpacity: 0.8
+        }).addTo(map)
+          .bindPopup("🚨 Attack from " + country);
+    }
+});
+</script>
+
+</body>
+</html>

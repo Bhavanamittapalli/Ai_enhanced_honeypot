@@ -1,0 +1,65 @@
+/* ================= MAIN LAYOUT ================= */
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #0f172a, #020617);
+    color: white;
+    display: flex;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+    width: 230px;
+    height: 100vh;
+    background: #0f172a;
+    border-right: 1px solid #1e293b;
+    padding-top: 30px;
+    position: fixed;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 18px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 20px 32px;
+    color: #ecf0f4;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background: #1e293b;
+    color: #38bdf8;
+}
+
+/* ================= MAIN CONTENT ================= */
+
+.main-content {
+    margin-left: 230px;
+    padding: 50px;
+    width: 100%;
+}
+
+/* ================= CARDS ================= */
+
+.card-container {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: #0f172a;
+    padding: 40px;
+    border-radius: 20px;
+    flex: 1;
+    min-width: 200px;
+    text-align: center;
+    border: 1px solid #1e293b;
+}

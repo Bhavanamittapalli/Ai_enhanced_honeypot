@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Attack Logs</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:#020617;
+  color:white;
+  display:flex;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+  width:230px;
+  height:100vh;
+  background:#0f172a;
+  border-right:1px solid #1e293b;
+  padding-top:20px;
+  position:fixed;
+}
+
+.sidebar h2{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.sidebar a{
+  display:block;
+  padding:12px 20px;
+  color:#94a3b8;
+  text-decoration:none;
+  transition:0.3s;
+}
+
+.sidebar a:hover{
+  background:#1e293b;
+  color:#38bdf8;
+}
+
+.active{
+  background:#1e293b;
+  color:#38bdf8 !important;
+}
+
+/* ================= MAIN ================= */
+.main{
+  margin-left:230px;
+  width:100%;
+  padding:20px;
+}
+
+/* ================= TABLE ================= */
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:#0f172a;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+th,td{
+  padding:12px;
+  text-align:center;
+  border-bottom:1px solid #1e293b;
+}
+
+th{
+  background:#111827;
+}
+
+tr:hover{
+  background:#1e293b;
+}
+
+/* Severity Colors */
+.sev-high{color:#ef4444;font-weight:bold;}
+.sev-medium{color:#f59e0b;font-weight:bold;}
+.sev-low{color:#22c55e;font-weight:bold;}
+
+/* Buttons */
+.block-btn{
+  color:#ef4444;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+.unblock-btn{
+  color:#22c55e;
+  font-weight:bold;
+  text-decoration:none;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+  <h2>🛡 AI Honeypot</h2>
+  <a href="/dashboard">Dashboard</a>
+  <a href="/logs" class="active">Logs</a>
+  <a href="/analytics">Analytics</a>
+  <a href="/blocked">Blocked IPs</a>
+  <a href="/system">System</a>
+  <a href="/logout" style="color:#ef4444;">Logout</a>
+</div>
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="main">
+
+<h2>📄 Attack Logs</h2>
+
+<table>
+
+<tr>
+  <th>IP Address</th>
+  <th>Username</th>
+  <th>Country</th>
+  <th>Timestamp</th>
+  <th>Severity</th>
+  <th>Action</th>
+</tr>
+
+{% for a in attacks %}
+<tr>
+  <td>{{ a.ip }}</td>
+  <td>{{ a.username }}</td>
+  <td>{{ a.country }}</td>
+  <td>{{ a.timestamp }}</td>
+
+  <td class="{% if a.severity == 'HIGH' %}sev-high{% elif a.severity == 'MEDIUM' %}sev-medium{% else %}sev-low{% endif %}">
+    {{ a.severity }}
+  </td>
+
+  <td>
+      {% if a.ip in blocked_ips %}
+          <a href="/unblock/{{ a.ip }}" class="unblock-btn">
+              Unblock
+          </a>
+      {% else %}
+          <a href="/block/{{ a.ip }}" class="block-btn">
+              Block
+          </a>
+      {% endif %}
+  </td>
+
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

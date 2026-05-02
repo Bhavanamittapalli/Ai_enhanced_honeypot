@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Secure Portal</title>
+<style>
+body{
+  background:#020617;
+  font-family:Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  color:white;
+}
+
+.box{
+  background:#0f172a;
+  padding:40px;
+  border-radius:12px;
+  width:300px;
+  text-align:center;
+  box-shadow:0 0 20px rgba(0,255,255,0.08);
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  border-radius:6px;
+  border:none;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  background:#38bdf8;
+  border:none;
+  color:black;
+  font-weight:bold;
+  border-radius:6px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+<div class="box">
+  <h2>Secure Admin Login</h2>
+  <form method="POST">
+    <input name="username" placeholder="Username" required>
+    <input name="password" type="password" placeholder="Password" required>
+    <button>Login</button>
+  </form>
+</div>
+</body>
+</html>

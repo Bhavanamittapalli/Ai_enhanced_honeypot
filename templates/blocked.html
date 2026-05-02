@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Blocked IP Management</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+body{
+  margin:0;
+  font-family:'Segoe UI', sans-serif;
+  background:#020617;
+  color:white;
+  display:flex;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+  width:230px;
+  height:100vh;
+  background:#0f172a;
+  border-right:1px solid #1e293b;
+  padding-top:20px;
+  position:fixed;
+}
+
+.sidebar h2{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.sidebar a{
+  display:block;
+  padding:12px 20px;
+  color:#94a3b8;
+  text-decoration:none;
+  transition:0.3s;
+}
+
+.sidebar a:hover{
+  background:#1e293b;
+  color:#38bdf8;
+}
+
+.active{
+  background:#1e293b;
+  color:#38bdf8 !important;
+}
+
+/* ================= MAIN ================= */
+.main{
+  margin-left:230px;
+  width:100%;
+  padding:40px;
+}
+
+/* ================= TABLE ================= */
+table{
+  width:70%;
+  margin-top:30px;
+  border-collapse:collapse;
+  background:#0f172a;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+th,td{
+  padding:12px;
+  text-align:center;
+  border-bottom:1px solid #1e293b;
+}
+
+th{
+  background:#111827;
+}
+
+tr:hover{
+  background:#1e293b;
+}
+
+.unblock-btn{
+  color:#22c55e;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+.card{
+  background:#0f172a;
+  padding:20px;
+  border-radius:12px;
+  display:inline-block;
+  border:1px solid #1e293b;
+  margin-top:20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+  <h2>🛡 AI Honeypot</h2>
+  <a href="/dashboard">Dashboard</a>
+  <a href="/logs">Logs</a>
+  <a href="/analytics">Analytics</a>
+  <a href="/blocked" class="active">Blocked IPs</a>
+  <a href="/system">System</a>
+  <a href="/logout" style="color:#ef4444;">Logout</a>
+</div>
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="main">
+
+<h2>🚫 Blocked IP Management</h2>
+
+<div class="card">
+  <h3>Total Blocked IPs</h3>
+  <p style="font-size:24px; font-weight:bold;">
+    {{ blocked_ips|length }}
+  </p>
+</div>
+
+{% if blocked_ips %}
+<table>
+<tr>
+  <th>Blocked IP</th>
+  <th>Action</th>
+</tr>
+
+{% for ip in blocked_ips %}
+<tr>
+  <td>{{ ip }}</td>
+  <td>
+    <a href="/unblock/{{ ip }}" class="unblock-btn">
+      Unblock
+    </a>
+  </td>
+</tr>
+{% endfor %}
+</table>
+
+{% else %}
+<p style="margin-top:40px; color:#94a3b8;">
+  No blocked IPs yet.
+</p>
+{% endif %}
+
+</div>
+
+</body>
+</html>

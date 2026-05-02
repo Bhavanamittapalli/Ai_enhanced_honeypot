@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attack Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI', sans-serif;
+    background:#020617;
+    color:white;
+    display:flex;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+  width:230px;
+  height:100vh;
+  background:#0f172a;
+  border-right:1px solid #1e293b;
+  padding-top:20px;
+  position:fixed;
+}
+
+.sidebar h2{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.sidebar a{
+  display:block;
+  padding:12px 20px;
+  color:#94a3b8;
+  text-decoration:none;
+  transition:0.3s;
+}
+
+.sidebar a:hover{
+  background:#1e293b;
+  color:#38bdf8;
+}
+
+.active{
+  background:#1e293b;
+  color:#38bdf8 !important;
+}
+
+/* ================= MAIN ================= */
+.main{
+    margin-left:230px;
+    width:100%;
+    padding:40px;
+}
+
+.chart-container{
+    width:80%;
+    margin:40px auto;
+    background:#0f172a;
+    padding:30px;
+    border-radius:12px;
+    border:1px solid #1e293b;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+  <h2>🛡 AI Honeypot</h2>
+  <a href="/dashboard">Dashboard</a>
+  <a href="/logs">Logs</a>
+  <a href="/analytics" class="active">Analytics</a>
+  <a href="/blocked">Blocked IPs</a>
+  <a href="/system">System</a>
+  <a href="/logout" style="color:#ef4444;">Logout</a>
+</div>
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="main">
+
+    <h2>📊 Attack Trend Analytics</h2>
+    <p style="color:#94a3b8;">Time-based attack monitoring</p>
+
+    <div class="chart-container">
+        <canvas id="trendChart"></canvas>
+    </div>
+
+</div>
+
+<script>
+const ctx = document.getElementById('trendChart').getContext('2d');
+
+const timestamps = {{ timestamps | tojson }};
+const counts = {{ counts | tojson }};
+
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: timestamps,
+        datasets: [{
+            label: 'Attack Activity',
+            data: counts,
+            borderColor: '#38bdf8',
+            backgroundColor: 'rgba(56,189,248,0.2)',
+            tension: 0.3,
+            fill: true
+        }]
+    },
+    options: {
+        plugins: {
+            legend: { labels: { color: "white" } }
+        },
+        scales: {
+            x: { ticks: { color: "white" } },
+            y: { ticks: { color: "white" }, beginAtZero: true }
+        }
+    }
+});
+</script>
+
+</body>
+</html>

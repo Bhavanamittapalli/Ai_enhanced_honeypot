@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Honeypot - Secure Admin Login</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#020617,#0f172a);
+    font-family:'Segoe UI', sans-serif;
+    color:white;
+}
+
+/* Login Card */
+.login-card{
+    background:#0f172a;
+    padding:40px;
+    border-radius:16px;
+    width:380px;
+    text-align:center;
+    box-shadow:0 0 30px rgba(56,189,248,0.15);
+    border:1px solid #1e293b;
+}
+
+/* Title */
+.login-card h2{
+    margin-bottom:5px;
+}
+
+.subtitle{
+    color:#94a3b8;
+    font-size:14px;
+    margin-bottom:20px;
+}
+
+/* Warning */
+.warning{
+    font-size:13px;
+    color:#f59e0b;
+    margin-bottom:20px;
+}
+
+/* Inputs */
+input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:8px;
+    border:1px solid #1e293b;
+    background:#020617;
+    color:white;
+    font-size:14px;
+}
+
+input:focus{
+    outline:none;
+    border-color:#38bdf8;
+}
+
+/* Button */
+button{
+    width:100%;
+    padding:12px;
+    margin-top:15px;
+    border-radius:8px;
+    border:none;
+    background:#38bdf8;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#0ea5e9;
+    transform:scale(1.03);
+}
+
+/* Error Message */
+.error{
+    color:#ef4444;
+    margin-top:10px;
+    font-size:13px;
+}
+
+/* Signup Link */
+.signup-link{
+    margin-top:18px;
+    font-size:14px;
+    color:#94a3b8;
+}
+
+.signup-link a{
+    color:#38bdf8;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.signup-link a:hover{
+    text-decoration:underline;
+}
+
+/* Footer */
+.footer{
+    margin-top:20px;
+    font-size:12px;
+    color:#64748b;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <h2>🛡 AI Enhanced Honeypot</h2>
+    <div class="subtitle">Secure Admin Control Panel</div>
+
+    <div class="warning">
+        ⚠ Unauthorized access attempts are logged and monitored.
+    </div>
+
+    <form method="POST">
+        <input type="text" name="username" placeholder="Admin Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Secure Login</button>
+    </form>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <!-- ✅ Signup Added Here -->
+    <div class="signup-link">
+        New Admin? 
+        <a href="/signup">Request Access</a>
+    </div>
+
+    <div class="footer">
+        © 2026 AI Honeypot Security System
+    </div>
+
+</div>
+
+</body>
+</html>
