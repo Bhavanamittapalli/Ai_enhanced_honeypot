@@ -91,7 +91,7 @@ def send_webhook_alert(ip, severity, payload_summary):
         }
         requests.post(webhook_url, json=data, timeout=5)
     except Exception as e:
-        print(f"Failed to send webhook: {e}")
+        pass
 
 
 # =========================
