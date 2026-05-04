@@ -1,6 +1,7 @@
 # Virtual environments
 venv/
 .venv/
+venv_deploy/
 
 # Database (contains attack data - regenerated on run)
 attacks.db
